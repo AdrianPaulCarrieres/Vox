@@ -9,7 +9,8 @@ defmodule Vox.Commands do
   @commands %{
     "ping" => Vox.Commands.Ping,
     "greet" => Vox.Commands.Greet,
-    "voice" => Vox.Commands.Voice
+    "voice" => Vox.Commands.Voice,
+    "help" => Vox.Commands.Help
   }
 
   @command_names for {name, _} <- @commands, do: name
