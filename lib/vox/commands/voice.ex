@@ -55,7 +55,7 @@ defmodule Vox.Commands.Voice do
          {:ok, _} <- voice_channel_of_user(guild, user_id),
          {:ok, category} <- voice_category(guild),
          channel_name <- channel_name(privacy, member),
-         permissions <- author_permissions(user_id) |> Enum.map(&Map.from_struct/1),
+         permissions <- author_permissions(user_id),
          {:ok, v} <- create_voice_channel(guild.id, channel_name, category.id, permissions) do
       Logger.debug("Moving user #{member.user.username} to their new vocal channel")
       Api.modify_guild_member!(guild_id, user_id, channel_id: v.id)
@@ -65,8 +65,12 @@ defmodule Vox.Commands.Voice do
         "You've been moved to your new #{channel_name} channel"
       )
     else
-      {:error, error} ->
-        Command.send_response(interaction, "Error: #{error}")
+      {:user_error, error} ->
+        Logger.warn(inspect(error))
+        Command.send_ephemeral(interaction, "Error: #{error}")
+      {_, error} ->
+        Logger.error(inspect(error))
+        Command.send_response(interaction, "Error: #{inspect(error)}")
     end
   end
 
@@ -79,7 +83,7 @@ defmodule Vox.Commands.Voice do
     case voice_channel do
       nil ->
         Logger.warn("User not in voice channel")
-        {:error, "You need to join a voice channel first."}
+        {:user_error, "You need to join a voice channel first."}
 
       v ->
         Logger.debug("User found in voice channel")
@@ -97,9 +101,10 @@ defmodule Vox.Commands.Voice do
     case category do
       nil ->
         Logger.warn("'#{@category_name}' not found")
-        {:error, "'#{@category_name}' not found"}
+        {:guild_error, "'#{@category_name}' not found"}
 
       category ->
+        Logger.debug("Category found")
         {:ok, category}
     end
   end
@@ -114,7 +119,9 @@ defmodule Vox.Commands.Voice do
         "🔒"
       end
 
-    "#{emoji}·#{prefixe}'s voice"
+    n = "#{emoji}·#{prefixe}'s voice"
+    Logger.debug("Channel name is '#{n}'")
+    n
   end
 
   defp author_permissions(user_id) do
@@ -122,11 +129,12 @@ defmodule Vox.Commands.Voice do
   end
 
   defp create_voice_channel(guild_id, channel_name, parent_id, permissions) do
+    Logger.debug("Creating voice channel")
     Api.create_guild_channel(guild_id,
       name: channel_name,
       type: 2,
       parent_id: parent_id,
-      permission_overwrites: permissions
+      permission_overwrites: permissions |> Enum.map(&Map.from_struct/1)
     )
   end
 end

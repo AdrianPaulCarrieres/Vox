@@ -1,5 +1,6 @@
 defmodule Vox.Command do
   use Bitwise
+  require Logger
 
   @moduledoc """
   Behaviour for application command implementations.
@@ -30,6 +31,7 @@ defmodule Vox.Command do
 
   @spec send_ephemeral(Interaction.t(), binary()) :: {:ok}
   def send_ephemeral(%Interaction{} = interaction, content) do
+    Logger.debug("Sending ephemeral response")
     response = %{
       type: 4,
       data: %{
@@ -44,6 +46,7 @@ defmodule Vox.Command do
 
   @spec send_response(Interaction.t(), binary()) :: {:ok}
   def send_response(%Interaction{} = interaction, content) do
+    Logger.debug("Sending response")
     response = %{
       type: 4,
       data: %{
