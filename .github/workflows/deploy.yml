@@ -8,7 +8,7 @@ jobs:
   build:
     name: Build and test
     runs-on: ubuntu-latest
-    environment: production
+    environment: prod
 
     steps:
     - uses: actions/checkout@v3
@@ -41,12 +41,12 @@ jobs:
   publish:
     name: Publish to DockerHub
     runs-on: ubuntu-latest
-    environment: production
+    environment: prod
     needs: build
     steps:
       - uses: actions/checkout@v2
       - name: Publish to DockerHub
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@v4
         with:
           name: ${{ secrets.DOCKER_HUB_USERNAME }}/vox:${{ github.sha }}
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
@@ -55,7 +55,7 @@ jobs:
   deploy_prod:
     name: Deploy to VPS in prod env
     runs-on: ubuntu-latest
-    environment: production
+    environment: prod
     needs: [build, publish]
     steps:
       - uses: actions/checkout@v2
