@@ -8,7 +8,8 @@ defmodule Vox.Commands do
   # here and ensure they don't collide.
   @commands %{
     "ping" => Vox.Commands.Ping,
-    "greet" => Vox.Commands.Greet
+    "greet" => Vox.Commands.Greet,
+    "voice" => Vox.Commands.Voice
   }
 
   @command_names for {name, _} <- @commands, do: name
