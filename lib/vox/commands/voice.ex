@@ -9,6 +9,8 @@ defmodule Vox.Commands.Voice do
 
   require Logger
 
+  @category_name "📢 Voice Channels"
+
   @impl Command
   def spec(name) do
     %{
@@ -49,62 +51,58 @@ defmodule Vox.Commands.Voice do
     # privacy = Command.get_option(interaction, "privacy")
     privacy = "public"
 
-    result =
-      case get_voice_channel_of_user(guild_id, user_id) do
-        nil ->
-          Logger.warn("User should join voice channel first")
-          "You need to join a voice channel first."
+    with {:ok, guild} <- GuildCache.get(guild_id),
+         {:ok, _} <- voice_channel_of_user(guild, user_id),
+         {:ok, category} <- voice_category(guild),
+         channel_name <- channel_name(privacy, member),
+         permissions <- author_permissions(user_id) |> Enum.map(&Map.from_struct/1),
+         {:ok, v} <- create_voice_channel(guild.id, channel_name, category.id, permissions) do
+      Logger.debug("Moving user #{member.user.username} to their new vocal channel")
+      Api.modify_guild_member!(guild_id, user_id, channel_id: v.id)
 
-        _ ->
-          Logger.debug("Collecting guild's data")
-          parent_id = get_voice_category(guild_id) |> Map.get(:id)
-          channel_name = channel_name(privacy, member)
+      Vox.Utils.Command.send_ephemeral(
+        interaction,
+        "You've been moved to your new #{channel_name} channel"
+      )
 
-          permissions = author_permissions(user_id) |> Enum.map(&Map.from_struct/1)
-
-          Logger.debug("Creating voice channel")
-
-          new_voice_channel =
-            Api.create_guild_channel!(guild_id,
-              name: channel_name,
-              type: 2,
-              parent_id: parent_id,
-              permission_overwrites: permissions
-            )
-
-          Logger.debug("Moving user #{member.user.username} to their new vocal channel")
-          Api.modify_guild_member!(guild_id, member.user.id, channel_id: new_voice_channel.id)
-          "You've been moved to your new #{privacy} vocal channel"
-      end
-
-    Logger.debug(inspect(result))
-
-    response = %{
-      type: 4,
-      data: %{
-        content: result,
-        # For ephemeral message
-        flags: 1 <<< 6
-      }
-    }
-
-    Api.create_interaction_response(interaction, response)
+         else
+          {:error, error} ->
+            Vox.Utils.Command.send_response(interaction, "Error: #{error}")
+    end
   end
 
-  defp get_voice_channel_of_user(guild_id, user_id) do
-    guild_id
-    |> GuildCache.get!()
-    |> Map.get(:voice_states)
-    |> Enum.find(%{}, fn v -> v.user_id == user_id end)
-    |> Map.get(:channel_id)
+  defp voice_channel_of_user(guild, user_id) do
+    voice_channel =
+      guild
+      |> Map.get(:voice_states)
+      |> Enum.find(fn voice_state -> voice_state.user_id == user_id end)
+
+    case voice_channel do
+      nil ->
+        Logger.warn("User not in voice channel")
+        {:error, "You need to join a voice channel first."}
+
+      v ->
+        Logger.debug("User found in voice channel")
+        {:ok, v}
+    end
   end
 
-  defp get_voice_category(guild_id) do
-    guild_id
-    |> GuildCache.get!()
-    |> Map.get(:channels)
-    |> Map.values()
-    |> Enum.find(fn channel -> channel.name == "📢 Voice Channels" end)
+  defp voice_category(guild) do
+    category =
+      guild
+      |> Map.get(:channels)
+      |> Map.values()
+      |> Enum.find(fn channel -> channel.name == @category_name end)
+
+    case category do
+      nil ->
+        Logger.warn(@category_name <> " not found")
+        {:error, @category_name <> " not found"}
+
+      category ->
+        {:ok, category}
+    end
   end
 
   defp channel_name(privacy, member) do
@@ -122,5 +120,14 @@ defmodule Vox.Commands.Voice do
 
   defp author_permissions(user_id) do
     [%Overwrite{type: 1, id: user_id, allow: "30408704"}]
+  end
+
+  defp create_voice_channel(guild_id, channel_name, parent_id, permissions) do
+    Api.create_guild_channel(guild_id,
+      name: channel_name,
+      type: 2,
+      parent_id: parent_id,
+      permission_overwrites: permissions
+    )
   end
 end
