@@ -1,5 +1,5 @@
 defmodule Vox.Commands do
-  @doc """
+  @moduledoc """
   Handling and routing for commands and interactions.
   """
 
@@ -13,7 +13,7 @@ defmodule Vox.Commands do
 
   @command_names for {name, _} <- @commands, do: name
 
-  def register_commands() do
+  def register_commands do
     commands = for {name, command} <- @commands, do: command.spec(name)
 
     # Global application commands take a couple of minutes to update in Discord,

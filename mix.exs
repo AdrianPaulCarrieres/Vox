@@ -24,7 +24,7 @@ defmodule Vox.MixProject do
     [
       {:nostrum, "~> 0.6"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:dotenv_parser, "~> 2.0"},
+      {:dotenv_parser, "~> 2.0"}
     ]
   end
 end
