@@ -96,8 +96,8 @@ defmodule Vox.Commands.Voice do
 
     case category do
       nil ->
-        Logger.warn(@category_name <> " not found")
-        {:error, @category_name <> " not found"}
+        Logger.warn("'#{@category_name}' not found")
+        {:error, "'#{@category_name}' not found"}
 
       category ->
         {:ok, category}
