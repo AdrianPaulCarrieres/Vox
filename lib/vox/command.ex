@@ -1,9 +1,11 @@
 defmodule Vox.Command do
+  use Bitwise
+
   @moduledoc """
   Behaviour for application command implementations.
   """
 
-  alias Nostrum.Struct.Interaction
+  alias Nostrum.{Api, Struct.Interaction}
 
   @doc """
   Used to define the spec for the command to be used for command registration.
@@ -25,4 +27,30 @@ defmodule Vox.Command do
           Nostrum.Struct.ApplicationCommandInteractionData.options() | nil
   def get_option(interaction, name),
     do: Enum.find(interaction.data.options || [], fn %{name: n} -> n == name end)
+
+  @spec send_ephemeral(Interaction.t(), binary()) :: {:ok}
+  def send_ephemeral(%Interaction{} = interaction, content) do
+    response = %{
+      type: 4,
+      data: %{
+        content: content,
+        # For ephemeral message
+        flags: 1 <<< 6
+      }
+    }
+
+    Api.create_interaction_response(interaction, response)
+  end
+
+  @spec send_response(Interaction.t(), binary()) :: {:ok}
+  def send_response(%Interaction{} = interaction, content) do
+    response = %{
+      type: 4,
+      data: %{
+        content: content
+      }
+    }
+
+    Api.create_interaction_response(interaction, response)
+  end
 end

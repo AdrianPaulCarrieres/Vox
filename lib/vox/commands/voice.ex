@@ -60,14 +60,13 @@ defmodule Vox.Commands.Voice do
       Logger.debug("Moving user #{member.user.username} to their new vocal channel")
       Api.modify_guild_member!(guild_id, user_id, channel_id: v.id)
 
-      Vox.Utils.Command.send_ephemeral(
+      Command.send_ephemeral(
         interaction,
         "You've been moved to your new #{channel_name} channel"
       )
-
-         else
-          {:error, error} ->
-            Vox.Utils.Command.send_response(interaction, "Error: #{error}")
+    else
+      {:error, error} ->
+        Command.send_response(interaction, "Error: #{error}")
     end
   end
 
