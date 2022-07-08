@@ -68,6 +68,7 @@ defmodule Vox.Commands.Voice do
       {:user_error, error} ->
         Logger.warn(inspect(error))
         Command.send_ephemeral(interaction, "Error: #{error}")
+
       {_, error} ->
         Logger.error(inspect(error))
         Command.send_response(interaction, "Error: #{inspect(error)}")
@@ -130,6 +131,7 @@ defmodule Vox.Commands.Voice do
 
   defp create_voice_channel(guild_id, channel_name, parent_id, permissions) do
     Logger.debug("Creating voice channel")
+
     Api.create_guild_channel(guild_id,
       name: channel_name,
       type: 2,

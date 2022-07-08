@@ -4,7 +4,7 @@ defmodule Vox.Consumer do
 
   require Logger
 
-  alias Vox.Commands
+  alias Vox.{Commands, Utils.Voice}
 
   def start_link do
     Consumer.start_link(__MODULE__)
@@ -20,7 +20,7 @@ defmodule Vox.Consumer do
 
   def handle_event({:VOICE_STATE_UPDATE, %{channel_id: nil, guild_id: guild_id}, _ws_state}) do
     Logger.metadata(guild_id: guild_id)
-    Vox.Utils.Voice.purge_inactive_voice_channels(guild_id)
+    Voice.purge_inactive_voice_channels(guild_id)
   end
 
   def handle_event(_data) do
