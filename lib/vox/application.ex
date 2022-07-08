@@ -10,6 +10,7 @@ defmodule Vox.Application do
     children = [
       # Starts a worker by calling: Vox.Worker.start_link(arg)
       # {Vox.Worker, arg}
+      {Vox.Consumer.Supervisor, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
