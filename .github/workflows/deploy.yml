@@ -39,6 +39,7 @@ jobs:
   publish:
     name: Publish to DockerHub
     runs-on: ubuntu-latest
+    environment: prod
     needs: build
     steps:
       - uses: actions/checkout@v2
