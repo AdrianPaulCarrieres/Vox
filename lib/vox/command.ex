@@ -3,9 +3,7 @@ defmodule Vox.Command do
   Behaviour for application command implementations.
   """
 
-  use Bitwise
-
-  alias Nostrum.{Api, Struct.Interaction}
+  alias Nostrum.Struct.Interaction
 
   require Logger
 
