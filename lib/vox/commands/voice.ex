@@ -5,10 +5,8 @@ defmodule Vox.Commands.Voice do
 
   @behaviour Vox.Command
 
-  import Bitwise
-
   alias Nostrum.{Api, Cache.GuildCache, Struct.Overwrite}
-  alias Vox.Command
+  alias Vox.{Command, Utils.InteractionResponse}
 
   require Logger
 
@@ -63,18 +61,18 @@ defmodule Vox.Commands.Voice do
       Logger.debug("Moving user #{member.user.username} to their new vocal channel")
       Api.modify_guild_member!(guild_id, user_id, channel_id: v.id)
 
-      Command.send_ephemeral(
+      InteractionResponse.send_ephemeral(
         interaction,
         "You've been moved to your new #{channel_name} channel"
       )
     else
       {:user_error, error} ->
         Logger.warn(inspect(error))
-        Command.send_ephemeral(interaction, "Error: #{error}")
+        InteractionResponse.send_ephemeral(interaction, "Error: #{error}")
 
       {_, error} ->
         Logger.error(inspect(error))
-        Command.send_response(interaction, "Error: #{inspect(error)}")
+        InteractionResponse.send_response(interaction, "Error: #{inspect(error)}")
     end
   end
 
