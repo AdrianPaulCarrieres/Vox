@@ -26,7 +26,7 @@ defmodule Vox.Commands.CreateChannel do
           name: "Channel's name",
           description: "Create a channel in both categories. Must have #{@admin_role_name} role",
           required: true,
-          autocomplete: false,
+          autocomplete: false
         }
       ]
     }
