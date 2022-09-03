@@ -1,9 +1,12 @@
 defmodule Vox.Commands.Help do
-  @moduledoc false
+  @moduledoc """
+  Help messages
+  """
   @behaviour Vox.Command
-  require Logger
 
-  alias Vox.Utils.Help
+  alias Vox.Utils.{Help, InteractionResponse}
+
+  require Logger
 
   @impl Vox.Command
   def spec(name) do
@@ -24,6 +27,6 @@ defmodule Vox.Commands.Help do
 
     Help.send_help(user_id)
 
-    Vox.Command.send_ephemeral(interaction, "Help was sent in your DM!")
+    InteractionResponse.send_ephemeral(interaction, "Help was sent in your DM!")
   end
 end

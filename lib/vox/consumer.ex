@@ -2,9 +2,9 @@ defmodule Vox.Consumer do
   @moduledoc false
   use Nostrum.Consumer
 
-  require Logger
-
   alias Vox.{Commands, Utils.Voice}
+
+  require Logger
 
   def start_link do
     Consumer.start_link(__MODULE__)

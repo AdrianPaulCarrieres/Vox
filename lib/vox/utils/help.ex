@@ -1,14 +1,14 @@
 defmodule Vox.Utils.Help do
-  use Nostrum.Struct.Embed
-
   @moduledoc """
   Utils for sending help DM
   """
 
-  require Logger
+  use Nostrum.Struct.Embed
 
   alias Nostrum.Api
   alias Nostrum.Struct.Embed
+
+  require Logger
 
   defstruct []
 
