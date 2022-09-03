@@ -1,8 +1,11 @@
 defmodule Vox.Commands.Voice do
-  use Bitwise
-  @moduledoc false
+  @moduledoc """
+  Create voice channel for user
+  """
 
   @behaviour Vox.Command
+
+  use Bitwise
 
   alias Nostrum.{Api, Cache.GuildCache, Struct.Overwrite}
   alias Vox.Command

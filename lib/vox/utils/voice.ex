@@ -2,8 +2,10 @@ defmodule Vox.Utils.Voice do
   @moduledoc """
   Utils for voice channels
   """
-  require Logger
+
   alias Nostrum.{Api, Cache.GuildCache}
+
+  require Logger
 
   def purge_inactive_voice_channels(guild_id) do
     guild = GuildCache.get!(guild_id)

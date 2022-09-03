@@ -1,11 +1,11 @@
 defmodule Vox.Commands.CreateChannel do
-  use Bitwise
-
   @moduledoc """
-  Create channels for the user in the two groups
+  Create text channels in both groups
   """
 
   @behaviour Vox.Command
+
+  use Bitwise
 
   alias Nostrum.{Api, Cache.GuildCache, Struct.Overwrite}
   alias Vox.Command

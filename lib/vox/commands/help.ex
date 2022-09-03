@@ -1,9 +1,12 @@
 defmodule Vox.Commands.Help do
-  @moduledoc false
+  @moduledoc """
+  Help messages
+  """
   @behaviour Vox.Command
-  require Logger
 
   alias Vox.Utils.Help
+
+  require Logger
 
   @impl Vox.Command
   def spec(name) do

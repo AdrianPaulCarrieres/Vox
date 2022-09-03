@@ -1,12 +1,13 @@
 defmodule Vox.Command do
-  use Bitwise
-  require Logger
-
   @moduledoc """
   Behaviour for application command implementations.
   """
 
+  use Bitwise
+
   alias Nostrum.{Api, Struct.Interaction}
+
+  require Logger
 
   @doc """
   Used to define the spec for the command to be used for command registration.
