@@ -39,9 +39,8 @@ defmodule Vox.Commands.CreateChannel do
     Logger.metadata(guild_id: guild_id, user_id: user_id)
 
     with {:ok, guild} <- GuildCache.get(guild_id),
-        guild_roles <- Map.values(guild.roles),
+         guild_roles <- Map.values(guild.roles),
          true <- is_admin?(guild_roles, member.roles) do
-
     else
       {:guild_error, error} ->
         Logger.warn("Guild error: #{error}")
