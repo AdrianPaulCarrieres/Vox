@@ -11,7 +11,7 @@ defmodule Vox.Commands do
     "greet" => Vox.Commands.Greet,
     "voice" => Vox.Commands.Voice,
     "help" => Vox.Commands.Help,
-    "subject" => Vox.Commands.CreateChannel
+    "create_chan" => Vox.Commands.CreateChannel
   }
 
   @command_names for {name, _} <- @commands, do: name
