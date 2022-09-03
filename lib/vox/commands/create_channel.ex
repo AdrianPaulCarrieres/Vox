@@ -42,7 +42,7 @@ defmodule Vox.Commands.CreateChannel do
          guild_roles <- Map.values(guild.roles),
          true <- is_admin?(guild_roles, member.roles),
          {:ok, categories} <- groups_categories(guild) do
-      Enum.map(categories, fn c ->
+      Enum.each(categories, fn c ->
         Api.create_guild_channel(guild_id,
           name: name,
           type: 0,
