@@ -19,14 +19,13 @@ defmodule Vox.Commands.CreateChannel do
   def spec(name) do
     %{
       name: name,
-      description: "Create a channel with the given name in both groups",
+      description: "Create channels in both groups.",
       options: [
         %{
           type: 3,
-          name: "Channel's name",
-          description: "Create a channel in both categories. Must have #{@admin_role_name} role",
-          required: true,
-          autocomplete: false
+          name: "name",
+          description: "Name of the channel",
+          required: true
         }
       ]
     }
@@ -35,5 +34,12 @@ defmodule Vox.Commands.CreateChannel do
   @impl Command
   def handle_interaction(interaction) do
     %{guild_id: guild_id, member: member} = interaction
+    user_id = member.user.id
+
+    Logger.metadata(guild_id: guild_id, user_id: user_id)
+
+    dbg(interaction)
+
+    Command.send_ephemeral(interaction, "hihi")
   end
 end
