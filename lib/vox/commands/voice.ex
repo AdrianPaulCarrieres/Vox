@@ -5,7 +5,7 @@ defmodule Vox.Commands.Voice do
 
   @behaviour Vox.Command
 
-  use Bitwise
+  import Bitwise
 
   alias Nostrum.{Api, Cache.GuildCache, Struct.Overwrite}
   alias Vox.Command
