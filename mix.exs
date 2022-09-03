@@ -4,8 +4,8 @@ defmodule Vox.MixProject do
   def project do
     [
       app: :vox,
-      version: "2.0.0",
-      elixir: "~> 1.14",
+      version: "2.0.1",
+      elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
