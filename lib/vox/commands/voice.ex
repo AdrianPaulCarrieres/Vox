@@ -21,15 +21,10 @@ defmodule Vox.Commands.Voice do
         %{
           type: 3,
           name: "privacy",
-          description:
-            "Create a public or private voice channel. If private, you will need to use !invite",
+          description: "Create a public voice channel",
           required: true,
           autocomplete: false,
           choices: [
-            %{
-              name: "private",
-              value: "private"
-            },
             %{
               name: "public",
               value: "public"
