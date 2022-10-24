@@ -1,7 +1,4 @@
-FROM elixir:1.14.0-alpine as build
-
-# install build dependencies
-RUN apk add --update git build-base nodejs npm yarn python3 libstdc++ libgcc
+FROM elixir:1.14.1-alpine as build
 
 RUN mkdir /app
 WORKDIR /app
@@ -29,7 +26,7 @@ RUN mix release
 FROM alpine:3.16.0 AS app
 
 # install runtime dependencies
-RUN apk add --update bash openssl libstdc++ libgcc
+RUN apk add --update bash
 
 ENV MIX_ENV=prod
 
