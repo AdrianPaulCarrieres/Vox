@@ -26,7 +26,7 @@ RUN mix release
 FROM alpine:3.16.0 AS app
 
 # install runtime dependencies
-RUN apk add --update bash
+RUN apk add --update bash libstdc++ libgcc
 
 ENV MIX_ENV=prod
 
