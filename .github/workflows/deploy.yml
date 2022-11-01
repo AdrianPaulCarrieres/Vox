@@ -67,5 +67,5 @@ jobs:
             docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password ${{ secrets.DOCKER_HUB_TOKEN }}
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/vox:${{ github.sha }}
             (docker stop vox && docker rm vox) || echo "Aucun conteneur vox détecté"
-            docker run --env DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }} --name vox -d ${{ secrets.DOCKER_HUB_USERNAME }}/vox:${{ github.sha }}
+            docker run --restart=unless-stopped --env DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }} --name vox -d ${{ secrets.DOCKER_HUB_USERNAME }}/vox:${{ github.sha }}
             docker system prune -af
