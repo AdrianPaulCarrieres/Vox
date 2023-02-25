@@ -15,7 +15,7 @@ jobs:
     name: Formatting, Credo
     runs-on: ubuntu-latest
     env:
-      ImageOs: ubuntu20
+      ImageOS: ubuntu20
 
     steps:
     - uses: actions/checkout@v3
