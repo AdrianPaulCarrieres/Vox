@@ -40,6 +40,7 @@ jobs:
 
   publish:
     name: Publish to DockerHub
+    environment: prod
     runs-on: ubuntu-latest
     env:
       ImageOS: ubuntu20
