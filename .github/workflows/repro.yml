@@ -9,7 +9,7 @@ jobs:
     name: Build and test
     runs-on: ubuntu-latest
     env:
-      ImageOS: ubuntu22
+      ImageOS: ubuntu20
     steps:
     - uses: actions/checkout@v3
     
@@ -42,7 +42,7 @@ jobs:
     name: Publish to DockerHub
     runs-on: ubuntu-latest
     env:
-      ImageOS: ubuntu22
+      ImageOS: ubuntu20
     needs: build
     steps:
       - uses: actions/checkout@v2
