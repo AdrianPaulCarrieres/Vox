@@ -47,7 +47,6 @@ jobs:
         with:
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/vox:${{ github.sha }}
           context: .
-          load: true
           push: true
 
 
