@@ -23,8 +23,13 @@ defmodule Vox.MixProject do
   defp deps do
     [
       {:nostrum, "~> 0.6"},
-      {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-      {:dotenv_parser, "~> 2.0"}
+      {:dotenv_parser, "~> 2.0"},
+
+      # Lint & audit
+      {:mix_audit, "~> 2.0", only: [:dev, :test], runtime: false},
+      {:sobelow, "~> 0.13", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:doctor, "~> 0.21.0", only: :dev}
     ]
   end
 end
