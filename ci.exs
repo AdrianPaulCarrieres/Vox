@@ -58,8 +58,8 @@ defmodule Ci do
       source
       |> Container.with_env_variable("MIX_ENV", "test")
       |> Container.with_mounted_cache("_build/test", test_cache)
-      |> Container.with_exec(~w"mix compile")
       |> Container.with_exec(~w"mix test")
+      |> Container.stdout()
 
     doctor =
       dev
@@ -72,20 +72,39 @@ defmodule Ci do
       |> Container.with_exec(~w"mix credo")
       |> Container.stdout()
 
-    _sobelow =
+    sobelow =
       dev
       |> Container.with_file(".sobelow-conf", Directory.file(project, ".sobelow-conf"))
       |> Container.with_exec(~w"mix sobelow --config")
       |> Container.stdout()
 
-    _format =
+    format =
       dev
       |> Container.with_file(".formatter.exs", Directory.file(project, ".formatter.exs"))
       |> Container.stdout()
 
     Dagger.close(client)
 
-    Logger.info("Everything is done!")
+    steps = %{
+      "hex_audit" => hex_audit,
+      "credo" => credo,
+      "unused_deps" => unused_deps,
+      "doctor" => doctor,
+      "sobelow" => sobelow,
+      "format" => format,
+      "tests" => test
+    }
+    
+    failed = Enum.reduce(steps, [], fn
+      {step, {:ok, _results}}, acc ->
+        Logger.info(step <> " was a success")
+        acc
+      {step, {:error, _error}}, acc ->
+        Logger.warning(step <> " errored")
+        [step | acc]
+    end)
+
+    Logger.error("Failed steps: " <> inspect(failed))
   end
 end
 
