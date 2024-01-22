@@ -41,12 +41,12 @@ defmodule Ci do
     hex_audit =
       source
       |> Container.with_exec(~w"mix hex.audit")
-      |> Container.stdout()
+      |> Container.sync()
 
     unused_deps =
       source
       |> Container.with_exec(~w"mix deps.unlock --check-unused")
-      |> Container.stdout()
+      |> Container.sync()
 
     dev =
       source
@@ -59,29 +59,29 @@ defmodule Ci do
       |> Container.with_env_variable("MIX_ENV", "test")
       |> Container.with_mounted_cache("_build/test", test_cache)
       |> Container.with_exec(~w"mix test")
-      |> Container.stdout()
+      |> Container.sync()
 
     doctor =
       dev
       |> Container.with_exec(~w"mix doctor")
-      |> Container.stdout()
+      |> Container.sync()
 
     credo =
       dev
       |> Container.with_file(".credo.exs", Directory.file(project, ".credo.exs"))
       |> Container.with_exec(~w"mix credo")
-      |> Container.stdout()
+      |> Container.sync()
 
     sobelow =
       dev
       |> Container.with_file(".sobelow-conf", Directory.file(project, ".sobelow-conf"))
       |> Container.with_exec(~w"mix sobelow --config")
-      |> Container.stdout()
+      |> Container.sync()
 
     format =
       dev
       |> Container.with_file(".formatter.exs", Directory.file(project, ".formatter.exs"))
-      |> Container.stdout()
+      |> Container.sync()
 
     Dagger.close(client)
 
